@@ -17,8 +17,11 @@ It uses vanilla JS, making use of the Local Storage API to store the data and th
 Note: Due to a security limitation, if running files locally on Google Chrome you will be required to use the "create or refresh scoreboard" buttton to update score.
 If running from a hosted website, then this limitation can be ignored.
 
-Method 1) Type in a new score, and click "save" to update immediately, or "create or refresh scoreboard" to refresh with animation.
-Method 2) Use the incrementation buttons (+1 / -1) next to the score. Scores will be updated automatically.
+**Method 1)**
+Type in a new score, and click "save" to update immediately, or "create or refresh scoreboard" to refresh with animation.
+
+**Method 2)**
+Use the incrementation buttons (+1 / -1) next to the score. Scores will be updated automatically.
 
 
 ### Credits
