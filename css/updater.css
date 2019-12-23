@@ -1,0 +1,142 @@
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:700i');
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+
+body {
+    background-color: #ddd;
+}
+
+.container {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 25px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.2) 0px 0px 25px;
+}
+
+.title {
+    clear: both;
+    font-size: 3em;
+    font-weight: bold;
+}
+
+label {
+    font-weight: bold;
+    clear: both;
+    display: block;
+}
+
+.buttons {
+    margin-top: 50px;
+}
+
+.teams {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    grid-row-gap: 25px;
+    grid-column-gap: 15px;
+    margin-top: 25px;
+}
+
+button {
+    border: none;
+    color: white;
+    background-color: darkblue;
+    border-radius: 4px;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+* {
+    font-family: sans-serif
+}
+
+small {
+    display: block;
+    margin-top: 10px;
+}
+
+.smallnote {
+    font-size: 10px;
+}
+
+input {
+    padding: 10px;
+    margin-bottom: 15px;
+}
+
+bold {
+    font-weight: 700;
+}
+
+em {
+    font-style: italic;
+}
+
+.footer {
+    height: auto;
+    padding-top: 15px;
+    border-top: solid 2px #eee;
+    margin-top: 35px;
+    font-size: 10px;
+}
+
+#instructions {
+    clear: both;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 20px;
+}
+
+.instructions {
+    display: none;
+}
+
+.team {
+    border-radius: 5px;
+    background-color: #eee;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#removeteam,
+#reset {
+    background-color: darkred;
+}
+
+.quickbutton {
+    float: right;
+    align-self: center;
+}
+
+.quickbutton button {
+    margin: 5px;
+}
+
+.quickbutton .decrease {
+    background-color: darkred;
+}
+
+.quickincrease,
+.quickdecrease {
+    clear: both;
+}
+
+.countdown {
+    margin-top: 20px;
+}
+
+#countdown {
+    width: 75px;
+}
+
+.airhorn {
+    margin-left: 10px;
+}

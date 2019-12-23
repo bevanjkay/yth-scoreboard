@@ -2,81 +2,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="js/jscolor.min.js"></script>
     <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="css/updater.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    
-    <title>Scoreboard</title>
 
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:700i');
-        @import url('https://fonts.googleapis.com/css?family=Oswald');
-
-        body {
-            background-color:#ddd;
-        }
-        .container {
-            max-width:960px;
-            margin-left:auto;
-            margin-right:auto;
-            padding:25px;
-            background-color:white;
-            box-shadow:rgba(0,0,0,0.2) 0px 0px 25px;
-        }
-
-        .title {
-            clear: both;
-            font-size: 3em;
-            font-weight: bold;
-        }
-
-        label {
-            font-weight: bold;
-            clear: both;
-            display: block;
-            margin-top: 15px;
-        }
-
-        .teamone,
-        .teamtwo,
-        .buttons {
-            margin-top: 50px;
-        }
-
-        button {
-            border: none;
-            color: white;
-            background-color: darkblue;
-            border-radius: 4px;
-            padding: 10px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            opacity: 0.8;
-        }
-
-        * {
-            font-family: sans-serif
-        }
-
-        small {
-            display: block;
-            margin-top: 10px;
-        }
-
-        .smallnote {
-            font-size: 10px;
-        }
-
-        input {
-            padding: 10px;
-        }
-        
-        bold {font-weight:700;}
-        em {font-style:italic;}
-        
-        .footer {height:auto;padding-top:15px;border-top:solid 2px #eee; margin-top:35px; font-size:10px;}
-
-    </style>
+    <title>Scoreboard Updater</title>
 
 </head>
 
@@ -84,156 +13,108 @@
 
     <div class="container">
         <div class="title">Scoreboard Updater</div>
-        <p class="smallnote">
-            <bold>Note:</bold> If running from a local file, the save button does not work.<br>You <em>must</em> use the "Create or Refresh Scoreboard button" to update scores.</p>
 
-        <div class="teamone">
-            <label>Team One Name:</label> <input class="input" type="text" id="TeamOneName" name="test" />
-            <label>Team One Color:</label> <input class="input jscolor {required:false,hash:true}" type="text" id="TeamOneColor" />
-            <label>Team One Score:</label> <input class="input" type="text" id="TeamOneScore" /> <button id="increaseOne">+1</button> <button id="decreaseOne">-1</button> <span class="smallnote">These buttons refresh scoreboard.</span>
+        <!-- Instructions -->
+        <a id="instructions" href="#">Click to see instructions.</a>
+        <div class="instructions">
+            <b>To Add a Team</b>
+            <br>
+            <small>Click the "add team" button for as many teams as you will require. You can remove teams later.</small>
+            <br>
+            <b>To Remove a Team</b>
+            <br>
+            <small>Click the "remove team" button.
+                <b>Note:</b> This will always remove the last added team.</small>
+            <br>
+            <b>To Create the Scoreboard</b>
+            <br>
+            <small>Click "Create or Refresh Scoreboard". This will open a new browser tab/window. You can then drag this window
+                to your second screen/TV/projector.</small>
+            <br>
+            <b>To Update Scores</b>
+            <br>
+            <small>To update scores simply type in a new score and click "save" (to update scores immediately) or "create or refresh
+                scoreboard" (to have the screen fade back in). Alternatively you can click the +1 or -1 buttons (these update
+                the scores automatically).</small>
+            <br>
+            <b>Resetting</b>
+            <br>
+            <small>By default the scoreboard will try to reload the scores you had last time you used it (providing you are using
+                the same computer and browser). If you wish to reset everything back to default click "RESET ALL" and confirm
+                the prompt.</small>
+            <br>
+            <b>Setting Team Colours</b>
+            <br>
+            <small>By default the teams will be red, blue, orange and purple. You can override these by clicking in the "Team Colour"
+                input box and choosing a colour with the colour picker. The team names and scores will always be in white,
+                so light colours may make it difficult to read.</small>
+
+
+            <hr>
+
+            <small>
+                <bold>Note:</bold> If running from a local file, the save button does not work.
+                <br>You
+                <em>must</em> use the "Create or Refresh Scoreboard button" to update scores.</small>
         </div>
 
-        <div class="teamtwo">
-            <label>Team Two Name:</label><input class="input" type="text" id="TeamTwoName" />
-            <label>Team Two Color:</label><input class="input jscolor {required:false,hash:true}" type="text" id="TeamTwoColor" />
-            <label>Team Two Score:</label><input class="input" type="text" id="TeamTwoScore" /> <button id="increaseTwo">+1</button> <button id="decreaseTwo">-1</button> <span class="smallnote">These buttons refresh scoreboard.</span>
+        <!-- Add and remove team buttons -->
+        <div class="topbuttons">
+            <button id="addteam">Add Team</button>
+            <button id="removeteam">Remove Team</button>
         </div>
 
+        <!-- Wrapper for Team Score inputs, injected with JS -->
+        <div class="teams">
+
+        </div>
+
+        <div class="countdown">
+            <span>
+                <b>Countdown Seconds:</b>
+            </span>
+            <input class='input' type='number' id='countdown' />
+            <button id="gocountdown">Start Countdown</button>
+            <span class="airhorn">Airhorn?</span>
+            <input id="airhorn" type="checkbox" />
+        </div>
+
+        <!-- Save, refresh and reset buttons -->
         <div class="buttons">
             <button id="save">Save</button>
             <button id="refresh">Create or Refresh Scoreboard</button>
             <button id="reset">RESET ALL</button>
         </div>
-        <small>Clicking save will update immediately in some browsers.<br>Click "Create or Refresh Scoreboard" to push updates to scoreboard.</small>
-        
+        <small>Clicking save will update immediately in some browsers.
+            <br>Click "Create or Refresh Scoreboard" to push updates to scoreboard.</small>
+        <br>
+        <small>
+            <a href="https://bevankay.me/scoreboard/download/scoreboard.zip" target="_blank">Download for Offline Use (some features may not work in Chrome)</a>
+        </small>
+
+        <!-- Footer / Credits -->
         <div class="footer">
-    Created by Bevan Kay | <a href="https://bevankay.me/?ref=scoreboard" target="_blank">bevankay.me</a></div>
+            Created by Bevan Kay |
+            <a href="https://bevankay.me/?ref=scoreboard" target="_blank">bevankay.me</a>
+        </div>
     </div>
-    
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118354612-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-118354612-4');
+    </script>
+
+
 </body>
 
-<script>
-    
-    // Function to open new window - call scoreboard.html file
-    function createScoreboard() {
-        window.open("scoreboard/scoreboard.html", "status=no,titlebar=no,menubar=no,scrollbars=no");
-    }
-    
-    function getValues() {
-           $('input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = $(this).val();
-            localStorage.setItem(id, value);
-        });
-    }
-
-    
-    // Save input values
-    $('#save').on('click', function() {
-
-        $('input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = $(this).val();
-            localStorage.setItem(id, value);
-        });
-    });
-
-    
-    // Refresh external window, also updates scores from inputs
-    $('#refresh').on('click', function() {
-
-        
-        createScoreboard();
-        
-        setTimeout(getValues,250)
-     
-        
-
-
-
-    });
-
-    
-    // Load existing scoreboard values from local storage
-    $(document).ready(function() {
-        $('input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = localStorage.getItem(id);
-
-            $(this).val(value);
-
-        });
-    });
-
-    
-    // Reset stored values
-    $('#reset').on('click', function() {
-
-        if (confirm('Are you sure you wish to reset ALL data? This will automatically refresh the scoreboard.')) {
-            $('input[type="text"]').each(function() {
-                var id = $(this).attr('id');
-
-                localStorage.removeItem(id);
-                window.location.reload();
-
-
-            });
-        } else {
-            alert('Your data has not been reset.');
-
-        };
-    });
-
-
-
-
-    
-    // +1 and -1 Buttons
-    $('#increaseOne').on('click', function() {
-        var number = $('#TeamOneScore').val();
-        var number = Number(number)
-        var number = number + 1;
-        $('#TeamOneScore').val(number);
-
-        getValues();
-
-    
-
-    });
-
-    $('#decreaseOne').on('click', function() {
-        var number = $('#TeamOneScore').val();
-        var number = Number(number)
-        var number = number - 1;
-        $('#TeamOneScore').val(number);
-
-      getValues();
-
-      
-
-    });
-
-    $('#increaseTwo').on('click', function() {
-        var number = $('#TeamTwoScore').val();
-        var number = Number(number)
-        var number = number + 1;
-        $('#TeamTwoScore').val(number);
-
-      getValues();
-
-       
-
-    });
-
-    $('#decreaseTwo').on('click', function() {
-        var number = $('#TeamTwoScore').val();
-        var number = Number(number)
-        var number = number - 1;
-        $('#TeamTwoScore').val(number);
-
-       getValues();
-
-
-    });
-
-</script>
+<footer>
+    <script src="js/updater.js"></script>
+</footer>

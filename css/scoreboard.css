@@ -1,0 +1,176 @@
+@import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:700i');
+@import url('https://fonts.googleapis.com/css?family=Oswald');
+
+* {
+    font-family: sans-serif;
+}
+
+@-webkit-keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadein {
+    0% {
+        opacity: 0;
+    }
+    25% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeinslow {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes fadeinslow {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+#wrapper {
+    display: grid;
+    grid-template-columns: repeat( auto-fit, minmax(250px, 1fr));
+    height: 100vh;
+}
+
+.wrapper4 {
+    display: grid;
+    height: 100vh;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 1fr 1fr !important;
+}
+
+.team {
+    width: 100%;
+    height: 100%;
+    float: left;
+    text-align: center;
+    display: grid;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+}
+
+.team1 {
+    background-color: red;
+}
+
+.team2 {
+    background-color: blue;
+}
+
+.team3 {
+    background-color: orange;
+}
+
+.team4 {
+    background-color: purple;
+}
+
+.teamname {
+    color: white;
+    font-size: 4em;
+    font-weight: bold;
+    animation-delay: 500ms;
+    animation: fadein 2000ms linear;
+    text-shadow: 5px 5px 0px black;
+    font-family: 'Barlow Condensed', sans-serif;
+    text-transform: uppercase;
+}
+
+.teamscore {
+    color: white;
+    font-size: 12em;
+    font-weight: bold;
+    animation: fadein 2000ms linear;
+    text-shadow: 10px 10px 0px black;
+    font-family: 'Oswald', sans-serif;
+}
+
+body {
+    background-color: black;
+    -webkit-animation: fadein 500ms linear;
+    animation: fadein 500ms linear;
+}
+
+.countdownwrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.75);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+#countdown {
+    font-size: 24em;
+    color: white;
+    text-shadow: 10px 10px 0px black;
+    font-family: 'Oswald', sans-serif;
+    font-weight: bold;
+}
+
+.xwrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.0);
+    display: grid;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    opacity: 0;
+}
+
+#x {
+    font-family: 'Oswald', sans-serif;
+    font-size: 2em;
+    color: red;
+    text-shadow: 25px 25px 0px black;
+}

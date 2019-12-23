@@ -1,226 +1,25 @@
 <head>
+    <title>Scoreboard Display</title>
     <link rel="stylesheet" type="text/css" href="../css/normalise.css" />
-
-    <style>
-        @import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:700i');
-        @import url('https://fonts.googleapis.com/css?family=Oswald');
-
-
-
-        * {
-            font-family: sans-serif;
-        }
-
-        @-webkit-keyframes fadein {
-            0% {
-                opacity: 0;
-            }
-            25% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @-moz-keyframes fadein {
-            0% {
-                opacity: 0;
-            }
-            25% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadein {
-            0% {
-                opacity: 0;
-            }
-            25% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeinslow {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-        @-moz-keyframes fadeinslow {
-            0% {
-                opacity: 0;
-            }
-            50% {
-                opacity: 0;
-            }
-            100% {
-                opacity: 1;
-            }
-        }
-
-
-
-        .teamone {
-            width: 50%;
-            height: 100vh;
-            float: left;
-            text-align: center;
-            display: grid;
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
-            justify-content: center;
-            -ms-flex-line-pack: center;
-            align-content: center;
-            -webkit-animation: fadein 500ms linear;
-            animation: fadein 500ms linear;
-            background-color: red;
-        }
-
-
-        .teamtwo {
-            width: 50%;
-            height: 100vh;
-            float: right;
-            text-align: center;
-            display: grid;
-            -webkit-box-pack: center;
-            -ms-flex-pack: center;
-            justify-content: center;
-            -ms-flex-line-pack: center;
-            align-content: center;
-            -webkit-animation: fadein 500ms linear;
-            animation: fadein 500ms linear;
-            z-index: 2;
-            background-color: blue;
-        }
-
-        #wrapper::after {
-            content: '';
-            height: 100%;
-            width: 100%;
-            display: block;
-            position: relative;
-            background: linear-gradient(45deg, black, white);
-            mix-blend-mode: overlay;
-            opacity: 0.25;
-        }
-
-        .teamname {
-            color: white;
-            font-size: 4em;
-            font-weight: bold;
-            animation-delay: 500ms;
-            animation: fadein 2000ms linear;
-            text-shadow: 5px 5px 0px black;
-            font-family: 'Barlow Condensed', sans-serif;
-            text-transform: uppercase;
-        }
-
-        .teamscore {
-            color: white;
-            font-size: 12em;
-            font-weight: bold;
-            animation: fadein 2000ms linear;
-            text-shadow: 10px 10px 0px black;
-            font-family: 'Oswald', sans-serif;
-        }
-
-        body {
-            background-color: black;
-        }
-
-    </style>
+    <link rel="stylesheet" href="../css/scoreboard.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-    <script>
-       
-      var handle_storage = function () {
-      var TeamOneColor = localStorage.getItem("TeamOneColor");
-            $(".TeamOne").css("background-color", TeamOneColor);
-            var TeamTwoColor = localStorage.getItem("TeamTwoColor");
-            $(".TeamTwo").css("background-color", TeamTwoColor);
-
-            var TeamOneName = localStorage.getItem("TeamOneName");
-            $("#TeamOneName").text(TeamOneName);
-
-            var TeamOneScore = localStorage.getItem("TeamOneScore");
-            $("#TeamOneScore").text(TeamOneScore);
-
-
-
-
-            var TeamTwoName = localStorage.getItem("TeamTwoName");
-            $("#TeamTwoName").text(TeamTwoName);
-
-            var TeamTwoScore = localStorage.getItem("TeamTwoScore");
-            $("#TeamTwoScore").text(TeamTwoScore);
-      };
-
-      window.addEventListener("storage", handle_storage, false);
-        
-        $(document).ready(function() {
-            //This sessionStorage.getItem(); is also a predefined function in javascript
-            //will retrieve session and get the value;
-
-
-
-            var TeamOneColor = localStorage.getItem("TeamOneColor");
-            $(".TeamOne").css("background-color", TeamOneColor);
-            var TeamTwoColor = localStorage.getItem("TeamTwoColor");
-            $(".TeamTwo").css("background-color", TeamTwoColor);
-
-            var TeamOneName = localStorage.getItem("TeamOneName");
-            $("#TeamOneName").text(TeamOneName);
-
-            var TeamOneScore = localStorage.getItem("TeamOneScore");
-            $("#TeamOneScore").text(TeamOneScore);
-
-
-
-
-            var TeamTwoName = localStorage.getItem("TeamTwoName");
-            $("#TeamTwoName").text(TeamTwoName);
-
-            var TeamTwoScore = localStorage.getItem("TeamTwoScore");
-            $("#TeamTwoScore").text(TeamTwoScore);
-
-
-        });
-
-    </script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.7.0/timer.jquery.js"></script>
 </head>
 
 <body>
-    <div id="wrapper">
-        <div class="TeamOne">
-            <div class="inner">
-                <div id="TeamOneName" class="teamname"></div>
-                <div id="TeamOneScore" class="teamscore"></div>
-            </div>
-        </div>
+    <div class="countdownwrapper">
+        <div id="countdown"></div>
+    </div>
 
+    <div class="xwrapper">
+        <div id="x">X</div>
+    </div>
+    
+    <div id="wrapper" class="wrapperhelper">
 
-
-        <div class="teamtwo">
-            <div class="inner">
-                <div id="TeamTwoName" class="teamname"></div>
-                <div id="TeamTwoScore" class="teamscore"></div>
-
-            </div>
-        </div>
     </div>
 </body>
+
+<footer>
+    <script src="../js/scoreboard.js"></script>
+</footer>
