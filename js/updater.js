@@ -29,6 +29,7 @@
             localStorage.setItem("Teams",teams)
             localStorage.setItem("Team1Score",0);
             localStorage.setItem("Team2Score",0);
+            localStorage.setItem("font", "'Oswald'");
         }
 
         var i = 1;
@@ -148,6 +149,7 @@
                 localStorage.removeItem('Team' + c + 'Color');
                 localStorage.removeItem('Team' + c + 'Score');
                 localStorage.removeItem('airhorn');
+                localStorage.removeItem('font');
                 c++;
 
             }
@@ -209,6 +211,29 @@
         $('#instructions').text(text == "Click to see instructions." ? "Hide instructions." : "Click to see instructions.");
     });
     
+        // Show/Hide Font Options
+        $(document).on('click', '#fontchanger', function() {
+            $('.fonts').toggle();
+            $('.teams').toggle();
+            $('.buttons').toggle();
+            $('.topbuttons').toggle();
+            $('.countdown').toggle();
+            var text = $('#fontchanger').text();
+            $('#fontchanger').text(text == "Click to see font options." ? "Hide font options." : "Click to see font options.");
+        });
+
+           // Store Font Option
+           $(document).on('click', '#setfont', function() {
+
+            $('.fontoption').each(function() {
+                
+                if ($(this).is(":checked")) {
+                    let font = $(this).val();
+                    localStorage.setItem("font", font);
+                } 
+            });
+        });
+             
     
     // Start Timer
     $(document).on('click', '#gocountdown', function() {

@@ -1,9 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:700i');
-@import url('https://fonts.googleapis.com/css?family=Oswald');
-
-* {
-    font-family: sans-serif;
-}
+@import url('https://fonts.googleapis.com/css?family=Oswald|Press+Start+2P|Rubik+Mono+One|Bangers|VT323');
 
 @-webkit-keyframes fadein {
     0% {
@@ -114,8 +110,9 @@
     animation-delay: 500ms;
     animation: fadein 2000ms linear;
     text-shadow: 5px 5px 0px black;
-    font-family: 'Barlow Condensed', sans-serif;
+    /* font-family: 'Barlow Condensed', sans-serif; */
     text-transform: uppercase;
+    font-weight: 700;
 }
 
 .teamscore {
@@ -124,7 +121,7 @@
     font-weight: bold;
     animation: fadein 2000ms linear;
     text-shadow: 10px 10px 0px black;
-    font-family: 'Oswald', sans-serif;
+    /* font-family: 'Oswald', sans-serif; */
 }
 
 body {
@@ -150,7 +147,7 @@ body {
     font-size: 24em;
     color: white;
     text-shadow: 10px 10px 0px black;
-    font-family: 'Oswald', sans-serif;
+    /* font-family: 'Oswald', sans-serif; */
     font-weight: bold;
 }
 

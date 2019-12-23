@@ -79,9 +79,13 @@
            x++;
        }
 
+       var font = localStorage.getItem("font");
 
+       function setFont(font) {
+        document.getElementsByTagName("BODY")[0].style.fontFamily = font;
+       }
 
-
+       setFont(font);
 
    });
 

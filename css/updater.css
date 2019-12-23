@@ -1,5 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Barlow+Condensed:700i');
-@import url('https://fonts.googleapis.com/css?family=Oswald');
+@import url('https://fonts.googleapis.com/css?family=Oswald|Press+Start+2P|Rubik+Mono+One|Bangers|VT323');
 
 body {
     background-color: #ddd;
@@ -87,14 +87,14 @@ em {
     font-size: 10px;
 }
 
-#instructions {
+#instructions, #fontchanger {
     clear: both;
     font-size: 12px;
     display: block;
     margin-bottom: 20px;
 }
 
-.instructions {
+.instructions, .fonts {
     display: none;
 }
 

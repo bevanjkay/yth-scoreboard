@@ -16,6 +16,9 @@
 
         <!-- Instructions -->
         <a id="instructions" href="#">Click to see instructions.</a>
+
+        <a id="fontchanger" href="#">Click to see font options.</a>
+
         <div class="instructions">
             <b>To Add a Team</b>
             <br>
@@ -56,6 +59,16 @@
                 <bold>Note:</bold> If running from a local file, the save button does not work.
                 <br>You
                 <em>must</em> use the "Create or Refresh Scoreboard button" to update scores.</small>
+        </div>
+
+        <div class="fonts">
+            <input class="fontoption" type="radio" value="'Oswald'" name="font"/><span style="font-family:'Oswald';font-weight:bold;font-style:italic;" class="fontoption">OSWALD</span><br>
+            <input class="fontoption" type="radio" value="'Press Start 2P'" name="font"/><span style="font-family:'Press Start 2P';" class="fontoption">PRESS START 2P</span><br>
+            <input class="fontoption" type="radio" value="'Rubik Mono One'" name="font"/><span style="font-family:'Rubik Mono One';" class="fontoption">RUBIK MONO ONE</span><br>
+            <input class="fontoption" type="radio" value="'Bangers'" name="font"/><span style="font-family:'Bangers';" class="fontoption">BANGERS</span><br>
+            <input class="fontoption" type="radio" value="'VT323'" name="font"/><span style="font-family:'VT323';" class="fontoption">VT323</span><br>
+            <button id="setfont">Set Font</button>
+            
         </div>
 
         <!-- Add and remove team buttons -->
