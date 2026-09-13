@@ -1,252 +1,143 @@
-    // Function to open new window - call scoreboard.html file
-    function createScoreboard() {
-        window.open("scoreboard/scoreboard.html", "status=no,titlebar=no,menubar=no,scrollbars=no");
-    }
+const teamsEl = document.getElementById('teams');
+const fontsEl = document.getElementById('fonts');
+const statusEl = document.getElementById('status');
+const teamTemplate = document.getElementById('team-template');
 
-    // Function to get Values of Items in Local Storage    
-    function getValues() {
-        $('input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = $(this).val();
-            localStorage.setItem(id, value);
-        });
-    }
+let displayWindow = null;
+let statusTimer = null;
 
+const showStatus = (text) => {
+  statusEl.textContent = text;
+  clearTimeout(statusTimer);
+  statusTimer = setTimeout(() => { statusEl.textContent = ''; }, 1500);
+};
 
-    // Function to store Div that is created for each team added
-    function teamdiv(num) {
-        $('.teams').append("<div class='team team" + num + "'><div class='labels'><label>Team " + num + " Name:</label> <input class='input' type='text' id='Team" + num + "Name' /><label>Team " + num + " Color:</label> <input class=\"input jscolor {required:false,hash:true}\" type='text' id='Team" + num + "Color' /><label>Team " + num + " Score:</label> <input class='input' type='text' id='Team" + num + "Score' value='0' /></div><div class='quickbutton'><div class='quickincrease'><button diff='1' class='increase' id='increase" + num + "'>+1</button><button diff='100' class='increase' id='increase" + num + "'>+100</button><button diff='1000' class='increase' id='increase" + num + "'>+1000</button></div><div class='quickdecrease'><button diff='1' class='decrease' id='decrease" + num + "'>-1</button><button diff='100' class='decrease' id='decrease" + num + "'>-100</button><button diff='1000' class='decrease' id='decrease" + num + "'>-1000</button></div></div>");
-    };
+const readTeams = () =>
+  [...teamsEl.querySelectorAll('.team')].map((card) => ({
+    name: card.querySelector('[data-field="name"]').value.trim(),
+    color: card.querySelector('[data-field="color"]').value,
+    score: Number.parseInt(card.querySelector('[data-field="score"]').value, 10) || 0,
+  }));
 
+const readFont = () => fontsEl.querySelector('input:checked')?.value ?? Scoreboard.DEFAULT_FONT;
 
-    // Create a Team Section for Each Team in Local Storage and Collect Previously Entered Data
-    $(document).ready(function() {
+const pushToDisplay = (state) => {
+  if (!displayWindow || displayWindow.closed) return;
+  const origin = location.protocol === 'file:' ? '*' : location.origin;
+  displayWindow.postMessage({ type: 'scoreboard', state }, origin);
+};
 
-        var teams = localStorage.getItem("Teams");
-        
-        if (teams == undefined) {
-            teams = 2;
-            localStorage.setItem("Teams",teams)
-            localStorage.setItem("Team1Score",0);
-            localStorage.setItem("Team2Score",0);
-            localStorage.setItem("font", "'Oswald'");
-        }
+const save = (patch = {}) => {
+  const state = Scoreboard.save({
+    ...Scoreboard.load(),
+    teams: readTeams(),
+    font: readFont(),
+    ...patch,
+  });
+  pushToDisplay(state);
+  showStatus('Saved');
+  return state;
+};
 
-        var i = 1;
-        while (i <= teams) {
-            teamdiv(i);
-            jscolor.installByClassName("jscolor");        
-            i++;
-               
-            };
-    
-        
-        
+const openDisplay = () => {
+  displayWindow = window.open('scoreboard/scoreboard.html', 'scoreboard', 'popup');
+  displayWindow?.focus();
+};
 
-        $('input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = localStorage.getItem(id);
+const renderTeam = (team, index) => {
+  const card = teamTemplate.content.firstElementChild.cloneNode(true);
+  card.querySelector('legend').textContent = `Team ${index + 1}`;
+  card.querySelector('[data-field="name"]').value = team.name;
+  card.querySelector('[data-field="color"]').value = team.color;
+  card.querySelector('[data-field="score"]').value = team.score;
+  teamsEl.append(card);
+};
 
-            $(this).val(value);
+const renderFonts = (selected) => {
+  fontsEl.replaceChildren(
+    ...Scoreboard.FONTS.map((font) => {
+      const label = document.createElement('label');
+      label.className = 'font-option';
+      label.style.fontFamily = Scoreboard.fontFamily(font);
+      const input = Object.assign(document.createElement('input'), {
+        type: 'radio',
+        name: 'font',
+        value: font,
+        checked: font === selected,
+      });
+      label.append(input, ` ${font}`);
+      return label;
+    }),
+  );
+};
 
+const render = (state) => {
+  teamsEl.replaceChildren();
+  state.teams.forEach(renderTeam);
+  renderFonts(state.font);
+};
 
-        });
+render(Scoreboard.load());
 
-    });
+document.getElementById('add-team').addEventListener('click', () => {
+  const teams = readTeams();
+  if (teams.length >= Scoreboard.MAX_TEAMS) {
+    showStatus(`Maximum ${Scoreboard.MAX_TEAMS} teams`);
+    return;
+  }
+  renderTeam(Scoreboard.newTeam(teams.length), teams.length);
+  save();
+});
 
+document.getElementById('remove-team').addEventListener('click', () => {
+  const last = teamsEl.querySelector('.team:last-child');
+  if (!last) {
+    showStatus('No teams to remove');
+    return;
+  }
+  last.remove();
+  save();
+});
 
-    // Function to Add a New Team when Add a Team button clicked
-    $('#addteam').on('click', function() {
-        saveinputs();
-        var teams = localStorage.getItem("Teams");
-        var i = teams;
-        i++;
-        if (i <= 4) {
+teamsEl.addEventListener('input', () => save());
 
-            var teamscore = localStorage.getItem("Team" + i + "Score");
-            if (teamscore == undefined) {
-                localStorage.setItem("Team" + i + "Score", 0)
-            };
+teamsEl.addEventListener('click', (event) => {
+  const button = event.target.closest('button[data-diff]');
+  if (!button) return;
+  const scoreInput = button.closest('.team').querySelector('[data-field="score"]');
+  const current = Number.parseInt(scoreInput.value, 10) || 0;
+  scoreInput.value = current + Number.parseInt(button.dataset.diff, 10);
+  save();
+});
 
-            teamdiv(i);
-            jscolor.installByClassName("jscolor");
+fontsEl.addEventListener('change', () => save());
 
+document.getElementById('start-countdown').addEventListener('click', () => {
+  const seconds = Number.parseInt(document.getElementById('countdown-seconds').value, 10);
+  if (!Number.isInteger(seconds) || seconds < 1) {
+    showStatus('Enter a number of seconds');
+    return;
+  }
+  const countdown = {
+    endsAt: Date.now() + seconds * 1000,
+    airhorn: document.getElementById('airhorn').checked,
+  };
+  if (!displayWindow || displayWindow.closed) openDisplay();
+  save({ countdown });
+});
 
+document.getElementById('open-scoreboard').addEventListener('click', () => {
+  save();
+  openDisplay();
+});
 
-            $('.team' + i + ' input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = localStorage.getItem(id);
+document.getElementById('reset').addEventListener('click', () => {
+  if (!confirm('Reset ALL teams, scores and settings?')) return;
+  const state = Scoreboard.reset();
+  render(state);
+  save();
+});
 
-            $(this).val(value);
-
-            });
-
-            localStorage.setItem("Teams", i);
-
-            console.log("Successfully added team " + i);
-        } else {
-            alert("Maximum 4 teams allowed.");
-        }
-    });
-
-
-    // Removes the last team.
-    $('#removeteam').on('click', function() {
-        
-        var teams = localStorage.getItem("Teams");
-        var a = teams;
-        if (a > 0) {
-        $('.team' + a).remove();
-        a--;
-        localStorage.setItem("Teams", a);
-        } else {
-            alert("There are no teams.");
-        }
-
-    });
-
-
-    
-    
-    // Function to save inputs
-    function saveinputs() { 
-        
-
-        $('input[type="text"]').each(function() {
-            var id = $(this).attr('id');
-            var value = $(this).val();
-            localStorage.setItem(id, value);
-        });
-    };
-  
-    // Click listener to save inputs
-    $('#save').on('click', function() {
-        saveinputs();
-    });
-
-
-    // Refresh external window, also updates scores from inputs
-    $('#refresh').on('click', function() {
-
-
-        createScoreboard();
-
-        setTimeout(getValues, 250)
-
-
-    });
-
-
-
-    // Reset stored values
-    $('#reset').on('click', function() {
-
-        if (confirm('Are you sure you wish to reset ALL data? This will automatically refresh the scoreboard.')) {
-            localStorage.removeItem('Teams');
-            var c = 0;
-            while (c < 5) {
-                localStorage.removeItem('Team' + c + 'Name');
-                localStorage.removeItem('Team' + c + 'Color');
-                localStorage.removeItem('Team' + c + 'Score');
-                localStorage.removeItem('airhorn');
-                localStorage.removeItem('font');
-                c++;
-
-            }
-
-            $('input[type="text"]').each(function() {
-                var id = $(this).attr('id');
-
-                localStorage.removeItem(id);
-
-                window.location.reload();
-
-
-            });
-        } else {
-            alert('Your data has not been reset.');
-
-        };
-    });
-
-
-
-
-    // Increase and Decrease Buttons - uses diff attribute in HTML to decide score increase/decrease
-    $(document).on('click', '.increase', function() {
-        var id = $(this).attr('id');
-        console.log(id);
-        var input = id[id.length - 1];
-        var number = $("#Team" + input + "Score").val();
-        var diff = $(this).attr('diff');
-        $("#Team" + input + "Score").val(parseInt(number) + parseInt(diff));
-
-        getValues();
-
-    });
-
-
-    $(document).on('click', '.decrease', function() {
-        var id = $(this).attr('id');
-        console.log(id);
-        var input = id[id.length - 1];
-        var number = $("#Team" + input + "Score").val();
-        var diff = $(this).attr('diff');
-        $("#Team" + input + "Score").val(parseInt(number) - parseInt(diff));
-
-        getValues();
-
-    });
-
-
-
-    // Show/Hide Instructions
-    $(document).on('click', '#instructions', function() {
-        $('.instructions').toggle();
-        $('.teams').toggle();
-        $('.buttons').toggle();
-        $('.topbuttons').toggle();
-		$('.countdown').toggle();
-        var text = $('#instructions').text();
-        $('#instructions').text(text == "Click to see instructions." ? "Hide instructions." : "Click to see instructions.");
-    });
-    
-        // Show/Hide Font Options
-        $(document).on('click', '#fontchanger', function() {
-            $('.fonts').toggle();
-            $('.teams').toggle();
-            $('.buttons').toggle();
-            $('.topbuttons').toggle();
-            $('.countdown').toggle();
-            var text = $('#fontchanger').text();
-            $('#fontchanger').text(text == "Click to see font options." ? "Hide font options." : "Click to see font options.");
-        });
-
-           // Store Font Option
-           $(document).on('click', '#setfont', function() {
-
-            $('.fontoption').each(function() {
-                
-                if ($(this).is(":checked")) {
-                    let font = $(this).val();
-                    localStorage.setItem("font", font);
-                } 
-            });
-        });
-             
-    
-    // Start Timer
-    $(document).on('click', '#gocountdown', function() {
-        var time = $('#countdown').val();
-        localStorage.setItem("countdown", time);
-        
-        if ($('#airhorn').is(':checked')) {
-            localStorage.setItem("airhorn", true)
-            } else {
-                localStorage.setItem("airhorn", false)
-            }
-        
-        createScoreboard();
-
-        setTimeout(getValues, 250)
-    });
+window.addEventListener('storage', (event) => {
+  if (event.key === null || event.key === 'scoreboard') render(Scoreboard.load());
+});

@@ -1,31 +1,37 @@
 # yth-scoreboard
 
-This scoreboard was designed to be used by Youth Ministries who do not have access to presentation software to run a scoreboard during games/tribal wars.
+A browser-based scoreboard and countdown for youth ministries that do not have presentation software to run a scoreboard during games or tribal wars.
 
-It uses vanilla JS, making use of the Local Storage API to store the data and then display it in a second browser window.
+It is plain HTML, CSS and JavaScript with no build step or dependencies. Scores are kept in the browser's Local Storage and shown in a second window that you drag to a TV or projector.
 
-### How to Use
+## How to Use
 
-#### Initial Creation
+### Setting up
 
-- Type in team names
-- Choose team colors (by default will be red and blue)
-- Click "create or refresh scoreboard"
-- Move newly created window / tab to second screen (TV or projector)
+- Type in team names and pick a colour for each (defaults are red and blue).
+- Use "Add Team" and "Remove Team" for up to four teams.
+- Click "Open / Refresh Scoreboard" and move the new window to your second screen.
 
-#### Updating Scores
-Note: Due to a security limitation, if running files locally on Google Chrome you will be required to use the "create or refresh scoreboard" buttton to update score.
-If running from a hosted website, then this limitation can be ignored.
+### Updating scores
 
-**Method 1)**
-Type in a new score, and click "save" to update immediately, or "create or refresh scoreboard" to refresh with animation.
+Type a new score, or use the quick buttons (+1, +100, +1000 and their negatives). Changes save automatically and appear on the scoreboard immediately.
 
-**Method 2)**
-Use the incrementation buttons (+1 / -1) next to the score. Scores will be updated automatically.
+### Countdown
 
+Enter a number of seconds and click "Start Countdown". Tick "Airhorn" to play a sound when the timer ends. The scoreboard window opens automatically if it is not already open.
 
-### Credits
-Created by [Bevan Kay Designs](https://bevankay.me) for [ythmin.com](http://ythmin.com).
+### Fonts
 
-JS Color Picker - http://jscolor.com/
+Choose from Oswald, Press Start 2P, Rubik Mono One, Bangers or VT323. The scoreboard updates as soon as you pick one.
 
+### Resetting
+
+Teams, scores and settings are remembered on the same computer and browser. Click "Reset All" to start again.
+
+## Running it yourself
+
+Open `index.html` in any modern browser, or host the folder on any static web server. Fonts load from Google Fonts, so an internet connection is needed for the custom fonts; everything else works offline.
+
+## Credits
+
+Created by [Bevan Kay](https://bevankay.me) for [ythmin.com](http://ythmin.com).
