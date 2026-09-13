@@ -1,129 +1,102 @@
-   // Function for when Local Storage is Updated
-   var handle_storage = function () {
-       var teams = localStorage.getItem("Teams");
-       console.log(teams);
-       var x = 1;
-       while (x <= teams) {
+const teamsEl = document.getElementById('teams');
+const countdownEl = document.getElementById('countdown');
+const countdownTimeEl = document.getElementById('countdown-time');
+const flashEl = document.getElementById('flash');
+const airhornEl = document.getElementById('airhorn');
 
+let countdownTimer = null;
+let activeCountdownEnd = null;
 
-           var color = localStorage.getItem("Team" + x + "Color");
-           $(".Team" + x).css("background-color", color);
+const renderTeams = ({ teams, font }) => {
+  document.body.style.fontFamily = Scoreboard.fontFamily(font);
+  teamsEl.dataset.count = String(teams.length);
 
-           console.log(color);
+  teams.forEach((team, index) => {
+    let tile = teamsEl.children[index];
+    if (!tile) {
+      tile = document.createElement('div');
+      tile.className = 'team';
+      tile.innerHTML = '<div class="team-name"></div><div class="team-score"></div>';
+      teamsEl.append(tile);
+    }
+    tile.style.backgroundColor = team.color;
+    tile.querySelector('.team-name').textContent = team.name;
 
-           var name = localStorage.getItem("Team" + x + "Name");
-           $("#Team" + x + "Name").text(name);
+    const scoreEl = tile.querySelector('.team-score');
+    const score = String(team.score);
+    if (scoreEl.textContent !== score) {
+      scoreEl.textContent = score;
+      scoreEl.classList.remove('bump');
+      void scoreEl.offsetWidth;
+      scoreEl.classList.add('bump');
+    }
+  });
 
-           console.log(name);
+  while (teamsEl.children.length > teams.length) teamsEl.lastElementChild.remove();
+};
 
-           var score = localStorage.getItem("Team" + x + "Score");
-           $("#Team" + x + "Score").text(score);
-           setwrapper();
-           x++;
-       }
+const formatTime = (ms) => {
+  const total = Math.max(0, Math.ceil(ms / 1000));
+  const minutes = Math.floor(total / 60);
+  const seconds = String(total % 60).padStart(2, '0');
+  return `${minutes}:${seconds}`;
+};
 
+const finishCountdown = (airhorn) => {
+  clearInterval(countdownTimer);
+  countdownTimer = null;
+  countdownEl.hidden = true;
 
+  if (airhorn) {
+    airhornEl.currentTime = 0;
+    airhornEl.play().catch(() => {});
+  }
+  flashEl.classList.remove('show');
+  void flashEl.offsetWidth;
+  flashEl.classList.add('show');
 
+  const state = Scoreboard.load();
+  if (state.countdown?.endsAt === activeCountdownEnd) {
+    Scoreboard.save({ ...state, countdown: null });
+  }
+  activeCountdownEnd = null;
+};
 
-   };
+const renderCountdown = ({ countdown }) => {
+  if (!countdown || countdown.endsAt <= Date.now()) {
+    if (!countdownTimer) countdownEl.hidden = true;
+    return;
+  }
+  if (countdown.endsAt === activeCountdownEnd) return;
 
-   // Add a listener for when Local Storage is updated
-   window.addEventListener("storage", handle_storage, false);
+  clearInterval(countdownTimer);
+  activeCountdownEnd = countdown.endsAt;
+  countdownEl.hidden = false;
 
+  const tick = () => {
+    const remaining = countdown.endsAt - Date.now();
+    countdownTimeEl.textContent = formatTime(remaining);
+    if (remaining <= 0) finishCountdown(countdown.airhorn);
+  };
+  tick();
+  countdownTimer = setInterval(tick, 200);
+};
 
-   // Adds new wrapper for when 4 teams used
-   function setwrapper() {
-       var teams = localStorage.getItem("Teams");
-       $('.wrapperhelper').each(function () {
-           if (teams == 4) {
-               $('.wrapperhelper').attr('class', 'wrapper4');
-           }
-       })
-   };
+const render = (state) => {
+  renderTeams(state);
+  renderCountdown(state);
+};
 
+render(Scoreboard.load());
 
+// Hosted: other tabs on the same origin fire storage events.
+window.addEventListener('storage', (event) => {
+  if (event.key === null || event.key === 'scoreboard') render(Scoreboard.load());
+});
 
-   // Creates default view when page loaded
-   $(document).ready(function () {
-
-       var countdown = localStorage.getItem("countdown");
-       if (countdown) {
-           timer(countdown);
-           $('.countdownwrapper').show();
-       } else {
-           $('.countdownwrapper').hide();
-       }
-
-       var teams = localStorage.getItem("Teams");
-       console.log(teams);
-       var x = 1;
-       while (x <= teams) {
-
-           $('#wrapper').append("<div class='team team" + x + "'>      <div class='inner'>               <div id='Team" + x + "Name' class='teamname'></div>                <div id='Team" + x + "Score' class='teamscore'></div>           </div>       </div>");
-
-
-           var color = localStorage.getItem("Team" + x + "Color");
-           $(".Team" + x).css("background-color", color);
-
-           console.log(color);
-
-           var name = localStorage.getItem("Team" + x + "Name");
-           $("#Team" + x + "Name").text(name);
-
-           console.log(name);
-
-           var score = localStorage.getItem("Team" + x + "Score");
-           $("#Team" + x + "Score").text(score);
-
-           setwrapper();
-           x++;
-       }
-
-       var font = localStorage.getItem("font");
-
-       function setFont(font) {
-        document.getElementsByTagName("BODY")[0].style.fontFamily = font;
-       }
-
-       setFont(font);
-
-   });
-
-
-   function timer(time) {
-       if (time) {
-           $("#countdown").timer({
-               countdown: true,
-               duration: time,
-               format: '%M:%S',
-               callback: function () {
-                   cleartimer();
-                   var airhorn = localStorage.getItem("airhorn");
-                   if (airhorn == "true") {
-                       var audioElement = document.createElement('audio');
-                       audioElement.setAttribute('src', '../js/airhorn.mp3');
-                       audioElement.play();
-                   }
-                   localStorage.removeItem("countdown");
-                   $('.countdownwrapper').fadeOut(750);
-                   $('#x').animate({
-                       fontSize: "36em"
-                   }, 200, function () {
-                       $('#x').animate({
-                           fontSize: "48em"
-                       }, 5000)
-                   });
-                   $('.xwrapper').fadeTo(4000, 100, function () {
-                       $('.xwrapper').fadeTo(1000, 0);
-
-
-
-                   });
-               }
-           })
-       }
-   };
-
-   function cleartimer() {
-       localStorage.removeItem("countdown");
-   }
+// Local files: Chrome gives every file:// page its own origin, so the
+// updater pushes state directly to the window it opened instead.
+window.addEventListener('message', (event) => {
+  if (event.source !== window.opener || event.data?.type !== 'scoreboard') return;
+  render({ ...Scoreboard.load(), ...event.data.state });
+});

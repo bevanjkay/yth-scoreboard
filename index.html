@@ -1,133 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="js/jscolor.min.js"></script>
-    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
-    <link rel="stylesheet" href="css/updater.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scoreboard Updater</title>
-
+    <meta name="description" content="A free browser-based scoreboard and countdown for youth ministry games. Runs on a second screen with no presentation software.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@700&family=Press+Start+2P&family=Rubik+Mono+One&family=VT323&display=swap">
+    <link rel="stylesheet" href="css/normalise.css">
+    <link rel="stylesheet" href="css/updater.css">
+    <script src="js/store.js" defer></script>
+    <script src="js/updater.js" defer></script>
 </head>
-
 <body>
+    <main class="container">
+        <header class="header">
+            <h1>Scoreboard Updater</h1>
+            <span class="status" id="status" role="status" aria-live="polite"></span>
+        </header>
 
-    <div class="container">
-        <div class="title">Scoreboard Updater</div>
+        <details class="panel">
+            <summary>Instructions</summary>
+            <dl>
+                <dt>Open the scoreboard</dt>
+                <dd>Click "Open / Refresh Scoreboard". It opens in a new window that you can drag to your second screen, TV or projector.</dd>
+                <dt>Update scores</dt>
+                <dd>Type a score or use the quick buttons. Changes save automatically and show on the scoreboard straight away.</dd>
+                <dt>Teams</dt>
+                <dd>Use "Add Team" and "Remove Team" for up to four teams. "Remove Team" always removes the last team.</dd>
+                <dt>Team colours</dt>
+                <dd>Pick a colour for each team. Names and scores are always white, so avoid very light colours.</dd>
+                <dt>Countdown</dt>
+                <dd>Enter a number of seconds and click "Start Countdown". Tick "Airhorn" to play a sound when it ends.</dd>
+                <dt>Resetting</dt>
+                <dd>Your teams and scores are remembered on this computer and browser. Click "Reset All" to start again.</dd>
+            </dl>
+        </details>
 
-        <!-- Instructions -->
-        <a id="instructions" href="#">Click to see instructions.</a>
+        <section class="panel">
+            <div class="row">
+                <button type="button" id="add-team">Add Team</button>
+                <button type="button" class="danger" id="remove-team">Remove Team</button>
+            </div>
+            <div class="teams" id="teams"></div>
+        </section>
 
-        <a id="fontchanger" href="#">Click to see font options.</a>
+        <section class="panel">
+            <h2>Countdown</h2>
+            <div class="row">
+                <label>Seconds <input type="number" id="countdown-seconds" min="1" max="5999" value="60"></label>
+                <label class="check"><input type="checkbox" id="airhorn"> Airhorn</label>
+                <button type="button" id="start-countdown">Start Countdown</button>
+            </div>
+        </section>
 
-        <div class="instructions">
-            <b>To Add a Team</b>
-            <br>
-            <small>Click the "add team" button for as many teams as you will require. You can remove teams later.</small>
-            <br>
-            <b>To Remove a Team</b>
-            <br>
-            <small>Click the "remove team" button.
-                <b>Note:</b> This will always remove the last added team.</small>
-            <br>
-            <b>To Create the Scoreboard</b>
-            <br>
-            <small>Click "Create or Refresh Scoreboard". This will open a new browser tab/window. You can then drag this window
-                to your second screen/TV/projector.</small>
-            <br>
-            <b>To Update Scores</b>
-            <br>
-            <small>To update scores simply type in a new score and click "save" (to update scores immediately) or "create or refresh
-                scoreboard" (to have the screen fade back in). Alternatively you can click the +1 or -1 buttons (these update
-                the scores automatically).</small>
-            <br>
-            <b>Resetting</b>
-            <br>
-            <small>By default the scoreboard will try to reload the scores you had last time you used it (providing you are using
-                the same computer and browser). If you wish to reset everything back to default click "RESET ALL" and confirm
-                the prompt.</small>
-            <br>
-            <b>Setting Team Colours</b>
-            <br>
-            <small>By default the teams will be red, blue, orange and purple. You can override these by clicking in the "Team Colour"
-                input box and choosing a colour with the colour picker. The team names and scores will always be in white,
-                so light colours may make it difficult to read.</small>
+        <section class="panel">
+            <h2>Font</h2>
+            <div class="row" id="fonts"></div>
+        </section>
 
+        <section class="row actions">
+            <button type="button" class="primary" id="open-scoreboard">Open / Refresh Scoreboard</button>
+            <button type="button" class="danger" id="reset">Reset All</button>
+        </section>
 
-            <hr>
+        <footer class="footer">
+            <p>Created by <a href="https://bevankay.me/?ref=scoreboard" target="_blank" rel="noopener">Bevan Kay</a>.
+            <a href="https://github.com/bevanjkay/yth-scoreboard" target="_blank" rel="noopener">Source on GitHub</a>.
+            <a href="https://bevankay.me/scoreboard/download/scoreboard.zip">Download for offline use</a>.</p>
+        </footer>
+    </main>
 
-            <small>
-                <bold>Note:</bold> If running from a local file, the save button does not work.
-                <br>You
-                <em>must</em> use the "Create or Refresh Scoreboard button" to update scores.</small>
-        </div>
-
-        <div class="fonts">
-            <input class="fontoption" type="radio" value="'Oswald'" name="font"/><span style="font-family:'Oswald';font-weight:bold;font-style:italic;" class="fontoption">OSWALD</span><br>
-            <input class="fontoption" type="radio" value="'Press Start 2P'" name="font"/><span style="font-family:'Press Start 2P';" class="fontoption">PRESS START 2P</span><br>
-            <input class="fontoption" type="radio" value="'Rubik Mono One'" name="font"/><span style="font-family:'Rubik Mono One';" class="fontoption">RUBIK MONO ONE</span><br>
-            <input class="fontoption" type="radio" value="'Bangers'" name="font"/><span style="font-family:'Bangers';" class="fontoption">BANGERS</span><br>
-            <input class="fontoption" type="radio" value="'VT323'" name="font"/><span style="font-family:'VT323';" class="fontoption">VT323</span><br>
-            <button id="setfont">Set Font</button>
-            
-        </div>
-
-        <!-- Add and remove team buttons -->
-        <div class="topbuttons">
-            <button id="addteam">Add Team</button>
-            <button id="removeteam">Remove Team</button>
-        </div>
-
-        <!-- Wrapper for Team Score inputs, injected with JS -->
-        <div class="teams">
-
-        </div>
-
-        <div class="countdown">
-            <span>
-                <b>Countdown Seconds:</b>
-            </span>
-            <input class='input' type='number' id='countdown' />
-            <button id="gocountdown">Start Countdown</button>
-            <span class="airhorn">Airhorn?</span>
-            <input id="airhorn" type="checkbox" />
-        </div>
-
-        <!-- Save, refresh and reset buttons -->
-        <div class="buttons">
-            <button id="save">Save</button>
-            <button id="refresh">Create or Refresh Scoreboard</button>
-            <button id="reset">RESET ALL</button>
-        </div>
-        <small>Clicking save will update immediately in some browsers.
-            <br>Click "Create or Refresh Scoreboard" to push updates to scoreboard.</small>
-        <br>
-        <small>
-            <a href="https://bevankay.me/scoreboard/download/scoreboard.zip" target="_blank">Download for Offline Use (some features may not work in Chrome)</a>
-        </small>
-
-        <!-- Footer / Credits -->
-        <div class="footer">
-            Created by Bevan Kay |
-            <a href="https://bevankay.me/?ref=scoreboard" target="_blank">bevankay.me</a>
-        </div>
-    </div>
-
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-118354612-4"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-
-        function gtag() {
-            dataLayer.push(arguments);
-        }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-118354612-4');
-    </script>
-
-
+    <template id="team-template">
+        <fieldset class="team">
+            <legend></legend>
+            <label>Name <input type="text" data-field="name" autocomplete="off"></label>
+            <label>Colour <input type="color" data-field="color"></label>
+            <label>Score <input type="number" data-field="score" step="1" inputmode="numeric"></label>
+            <div class="quick">
+                <button type="button" data-diff="1">+1</button>
+                <button type="button" data-diff="100">+100</button>
+                <button type="button" data-diff="1000">+1000</button>
+                <button type="button" class="danger" data-diff="-1">-1</button>
+                <button type="button" class="danger" data-diff="-100">-100</button>
+                <button type="button" class="danger" data-diff="-1000">-1000</button>
+            </div>
+        </fieldset>
+    </template>
 </body>
-
-<footer>
-    <script src="js/updater.js"></script>
-</footer>
+</html>

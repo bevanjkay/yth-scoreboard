@@ -1,25 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Scoreboard Display</title>
-    <link rel="stylesheet" type="text/css" href="../css/normalise.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bangers&family=Oswald:wght@700&family=Press+Start+2P&family=Rubik+Mono+One&family=VT323&display=swap">
+    <link rel="stylesheet" href="../css/normalise.css">
     <link rel="stylesheet" href="../css/scoreboard.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/timer.jquery/0.7.0/timer.jquery.js"></script>
+    <script src="../js/store.js" defer></script>
+    <script src="../js/scoreboard.js" defer></script>
 </head>
-
 <body>
-    <div class="countdownwrapper">
-        <div id="countdown"></div>
+    <div class="countdown" id="countdown" hidden>
+        <span id="countdown-time">0:00</span>
     </div>
 
-    <div class="xwrapper">
-        <div id="x">X</div>
-    </div>
-    
-    <div id="wrapper" class="wrapperhelper">
+    <div class="flash" id="flash" aria-hidden="true">X</div>
 
-    </div>
+    <main class="teams" id="teams"></main>
+
+    <audio id="airhorn" src="../assets/airhorn.mp3" preload="auto"></audio>
 </body>
-
-<footer>
-    <script src="../js/scoreboard.js"></script>
-</footer>
+</html>
